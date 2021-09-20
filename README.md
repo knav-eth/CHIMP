@@ -1,4 +1,4 @@
-# Chain Runners
+# CHIMP: On-Chain Image Manipulation Program
 
 ## Web app
 
