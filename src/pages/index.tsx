@@ -1,0 +1,178 @@
+import { Alert, AlertIcon, Box, Button, Link, Text } from "@chakra-ui/react"
+import "@fontsource/source-serif-pro/400.css"
+import { BigNumber } from "ethers"
+import _ from "lodash"
+import React, { useCallback, useMemo, useState } from "react"
+import Layout from "../components/Layout"
+import { LazyCanvas } from "../components/LazyCanvas"
+import { SuccessDisplay } from "../components/SuccessDisplay"
+import { useMainContract } from "../hooks/useMainContract"
+import { useWallet } from "../hooks/useWallet"
+import { COLOR_PALETTE } from "../utils/colors"
+import { parseWalletError } from "../utils/error"
+import { getBlockExplorerUrl } from "../utils/network"
+
+const dimensionSize = 16
+const paletteSize = 4
+
+function initializePixels(): Array<number> {
+  return _.range(dimensionSize ** 2).map(() => 0)
+}
+
+const initialPixels = initializePixels()
+
+function initializePalette(): Array<string> {
+  return _.range(paletteSize).map(() => COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)])
+}
+
+const initialPalette = initializePalette()
+
+export function packPixels(pixels: Array<number>): Array<BigNumber> {
+  const chunkCount = (2 * (dimensionSize ** 2)) / 256
+
+  const chunks: Array<BigNumber> = []
+  for (let chunkIndex = (chunkCount - 1); chunkIndex >= 0; chunkIndex--) {
+    let output = BigNumber.from(0)
+
+    for (let i = (((chunkIndex + 1) * 128) - 1); i >= (chunkIndex * 128); i--) {
+      const pixelValue = pixels[i]
+      output = output.shl(2).or(pixelValue)
+    }
+
+    chunks.push(output)
+  }
+  return chunks
+}
+
+export function unpackPixels(pixelChunks: Array<BigNumber>): Array<number> {
+  const pixels = []
+  for (let chunkIndex = (pixelChunks.length - 1); chunkIndex >= 0; chunkIndex--) {
+    let chunk = pixelChunks[chunkIndex]
+    for (let i = 0; i < 128; i++) {
+      pixels.push(chunk.and(3).toNumber())
+      chunk = chunk.shr(2)
+    }
+  }
+  return pixels
+}
+
+export function mapToColorIds(colors: Array<string>): Array<number> {
+  return colors.map((c) => COLOR_PALETTE.indexOf(c))
+}
+
+export default function Home() {
+  const { wallet } = useWallet()
+  const { mainContract } = useMainContract()
+  const provider = wallet?.web3Provider
+
+  const [pixels, setPixels] = useState<Array<number>>(initialPixels)
+  const [colors, setColors] = useState<Array<string>>(initialPalette)
+
+  const [isMinting, setIsMinting] = useState(false)
+  const [mintingTxn, setMintingTxn] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [tokenId, setTokenId] = useState<number | null>(null)
+
+  const handleResetState = useCallback(() => {
+    setErrorMessage(null)
+    setMintingTxn(null)
+    setTokenId(null)
+    setColors(initializePalette())
+    setPixels(initializePixels())
+  }, [setColors, setPixels])
+
+  const handleMint = useCallback(async () => {
+    if (!provider) return
+    try {
+      setIsMinting(true)
+      setErrorMessage(null)
+      const signer = provider.getSigner()
+      const contractWithSigner = mainContract.connect(signer)
+      console.log("packImage(pixels), mapToColorIds(colors)", packPixels(pixels), mapToColorIds(colors))
+
+      // @ts-ignore
+      const result = await contractWithSigner.mint(packPixels(pixels), mapToColorIds(colors))
+
+      setMintingTxn(result.hash)
+      const receipt = await result.wait()
+
+      const mintedBigNo: BigNumber = receipt.events?.[0]?.args?.[2]
+      const mintedId = parseInt(mintedBigNo._hex, 16)
+      setTokenId(mintedId)
+    } catch (e) {
+      // @ts-ignore
+      window.MM_ERR = e
+      console.error(`Error while minting: ${e.message}`)
+      setMintingTxn(null)
+      setErrorMessage(parseWalletError(e) ?? "Unexpected Error")
+    } finally {
+      setIsMinting(false)
+    }
+  }, [colors, mainContract, pixels, provider])
+
+  const transactionUrl: string | undefined = useMemo(() => {
+    if (!mintingTxn || !isMinting) {
+      return
+    }
+    const blockExplorerUrl = getBlockExplorerUrl()
+    if (!blockExplorerUrl) {
+      return
+    }
+    return `${blockExplorerUrl}/tx/${mintingTxn}`
+  }, [isMinting, mintingTxn])
+
+  return (
+    <Layout requireWallet>
+      <Box width="full" maxWidth="700px" marginX="auto" textAlign="center">
+        {(tokenId !== null) ? (
+          <SuccessDisplay onDone={handleResetState} tokenId={tokenId} />
+        ) : (
+          <>
+            <LazyCanvas
+              dimensionSize={dimensionSize}
+              colors={colors}
+              onColorsChange={setColors}
+              pixels={pixels}
+              onPixelsChange={setPixels}
+              containerProps={{}}
+            />
+            <Box marginTop="24px" textAlign="center">
+              <Button
+                onClick={handleMint}
+                isLoading={isMinting}
+                variant="outline"
+              >
+                Mint
+              </Button>
+            </Box>
+            <Box maxWidth="500px" marginTop={4} marginX="auto">
+              {(errorMessage) && (
+                <Alert status="error">
+                  <AlertIcon />
+                  <Text fontWeight="semibold" marginRight={1}>Error:</Text>
+                  {errorMessage}
+                </Alert>
+              )}
+              {(transactionUrl) && (
+                <Link
+                  href={transactionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Alert status="info" flexDirection={["column", "row"]}>
+                    <AlertIcon />
+                    <Text fontWeight="semibold" marginRight={2}>Minting in progress</Text>
+                    <Text>
+                      Click to view transaction
+                    </Text>
+                  </Alert>
+                </Link>
+              )}
+            </Box>
+          </>
+        )}
+
+      </Box>
+    </Layout>
+  )
+}

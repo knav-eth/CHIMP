@@ -1,0 +1,8 @@
+{
+  "hardhat": {
+    "mainContractAddress": "0x67d46f7BB7fD2985ba447000f6adFd9a715Df258"
+  },
+  "localhost": {
+    "mainContractAddress": "0x67d46f7BB7fD2985ba447000f6adFd9a715Df258"
+  }
+}
