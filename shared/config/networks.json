@@ -1,6 +1,6 @@
 {
   "rinkeby": {
-    "mainContractAddress": "0xe6DBf06792B829A2591561412E78D52c50Af3571"
+    "mainContractAddress": "0x58e9Be8E00873E12FF63a37de69D13eC6F984E28"
   },
   "mainnet": {
     "mainContractAddress": "0xdD301BB7734d0e269A614766c00509df735B254c"
