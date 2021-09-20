@@ -1,6 +1,6 @@
 import { Alert, AlertIcon, Box, Button, Link, Text } from "@chakra-ui/react"
 import "@fontsource/source-serif-pro/400.css"
-import { BigNumber } from "ethers"
+import { BigNumber, ethers } from "ethers"
 import _ from "lodash"
 import React, { useCallback, useMemo, useState } from "react"
 import Layout from "../components/Layout"
@@ -27,7 +27,7 @@ function initializePalette(): Array<string> {
 
 const initialPalette = initializePalette()
 
-export function packPixels(pixels: Array<number>): Array<BigNumber> {
+export function packPixels(pixels: Array<number>): [BigNumber, BigNumber] {
   const chunkCount = (2 * (dimensionSize ** 2)) / 256
 
   const chunks: Array<BigNumber> = []
@@ -41,7 +41,7 @@ export function packPixels(pixels: Array<number>): Array<BigNumber> {
 
     chunks.push(output)
   }
-  return chunks
+  return chunks as [BigNumber, BigNumber]
 }
 
 export function unpackPixels(pixelChunks: Array<BigNumber>): Array<number> {
@@ -56,8 +56,8 @@ export function unpackPixels(pixelChunks: Array<BigNumber>): Array<number> {
   return pixels
 }
 
-export function mapToColorIds(colors: Array<string>): Array<number> {
-  return colors.map((c) => COLOR_PALETTE.indexOf(c))
+export function mapToColorIds(colors: Array<string>): [number, number, number, number] {
+  return colors.map((c) => COLOR_PALETTE.indexOf(c)) as [number, number, number, number]
 }
 
 export default function Home() {
@@ -88,10 +88,8 @@ export default function Home() {
       setErrorMessage(null)
       const signer = provider.getSigner()
       const contractWithSigner = mainContract.connect(signer)
-      console.log("packImage(pixels), mapToColorIds(colors)", packPixels(pixels), mapToColorIds(colors))
 
-      // @ts-ignore
-      const result = await contractWithSigner.mint(packPixels(pixels), mapToColorIds(colors))
+      const result = await contractWithSigner.mint(packPixels(pixels), mapToColorIds(colors), { value: ethers.utils.parseEther("0.02") })
 
       setMintingTxn(result.hash)
       const receipt = await result.wait()
