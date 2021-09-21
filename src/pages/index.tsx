@@ -180,7 +180,7 @@ export default function Home() {
             </Box>
 
             <Box marginTop="24px" textAlign="center">
-              <Popover>
+              <Popover placement="top">
                 {({ onClose }) => {
                   return (
                     <>
