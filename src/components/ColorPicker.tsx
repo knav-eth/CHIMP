@@ -108,7 +108,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     </PopoverTrigger>
                     <Portal>
 
-                      <PopoverContent width="335px" height="335px" _focus={{ outline: "none" }}>
+                      <PopoverContent width="335px" height="290px" _focus={{ outline: "none" }}>
                         <PopoverArrow />
                         <PopoverBody>
                           <CirclePicker
