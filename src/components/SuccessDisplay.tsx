@@ -1,8 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { Box, Button, Flex, Heading, Link, Text } from "@chakra-ui/react"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
+import Confetti from "react-confetti"
 import { base64EncodeImageContent } from "../../shared/utils/metadata"
 import { useMainContract } from "../hooks/useMainContract"
+import { useWindowSize } from "../hooks/useWindowSize"
 import { getNetworkConfig } from "../utils/network"
 
 export type SuccessDisplayProps = {
@@ -40,11 +42,20 @@ export const SuccessDisplay: React.FC<SuccessDisplayProps> = ({ tokenId, onDone 
     return `${openSeaBaseUrl}/assets/${mainContractAddress}/${tokenId}`
   }, [tokenId])
 
+  const [height, width] = useWindowSize()
+
   return (
     <Box textAlign="center" width="full">
       <Heading as="h1" size="4xl" fontSize={["4xl", "5xl", "6xl"]} mb={4}>
-        Success!
+        🎉 Success! 🎉
       </Heading>
+      <Confetti
+        width={width}
+        height={height}
+        numberOfPieces={400}
+        recycle={false}
+        gravity={0.3}
+      />
       <Text>You have minted CHIMP #{tokenId}</Text>
       <Box maxWidth="400px" width="90%" marginX="auto" marginY={3}>
         <Box
@@ -67,11 +78,7 @@ export const SuccessDisplay: React.FC<SuccessDisplayProps> = ({ tokenId, onDone 
       )}
 
       <Box marginTop={8}>
-        <Button
-          onClick={onDone}
-          letterSpacing="3px"
-          textTransform="uppercase"
-        >
+        <Button onClick={onDone}>
           Done
         </Button>
       </Box>

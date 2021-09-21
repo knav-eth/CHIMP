@@ -136,29 +136,7 @@ export default function Home() {
               onPixelsChange={setPixels}
               containerProps={{}}
             />
-            <Box marginTop="24px" textAlign="center">
-              <Button
-                onClick={handleMint}
-                isLoading={isMinting}
-                variant="outline"
-                mr={2}
-              >
-                Reset
-              </Button>
-              {isConnected ? (
-                <Button
-                  onClick={handleMint}
-                  isLoading={isMinting}
-                  variant="outline"
-                >
-                  Mint for 0.02Ξ
-                </Button>
-              ) : (
-                <Box>
-                  <ConnectWalletButton />
-                </Box>
-              )}
-            </Box>
+
             <Box maxWidth="500px" marginTop={4} marginX="auto">
               {(errorMessage) && (
                 <Alert status="error">
@@ -183,11 +161,37 @@ export default function Home() {
                 </Link>
               )}
             </Box>
+
+            <Box marginTop="24px" textAlign="center">
+              <Button
+                onClick={handleMint}
+                isLoading={isMinting}
+                variant="outline"
+                mr={2}
+              >
+                Reset
+              </Button>
+              {isConnected ? (
+                <Button
+                  onClick={handleMint}
+                  isLoading={isMinting}
+                  variant="outline"
+                >
+                  Mint for 0.02Ξ
+                </Button>
+              ) : (
+                <Box>
+                  <ConnectWalletButton />
+                </Box>
+              )}
+            </Box>
           </>
         )}
 
       </Box>
-      <ExternalLogos />
+      <Box marginTop={3}>
+        <ExternalLogos />
+      </Box>
     </Layout>
   )
 }
