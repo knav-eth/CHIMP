@@ -34,7 +34,7 @@ const Canvas: React.FC<CanvasProps> = ({
   return (
     <Box flex={1} onMouseUp={stopDragging} width="full" {...containerProps}>
       <div
-        className="chimp"
+        className="chimp canvas"
         onMouseDown={startDragging}
         onMouseUp={stopDragging}
       >

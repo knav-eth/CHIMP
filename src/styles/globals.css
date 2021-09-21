@@ -30,3 +30,7 @@ footer {
 .chimp {
     image-rendering: pixelated;
 }
+
+.canvas {
+    cursor: cell;
+}
