@@ -236,7 +236,7 @@ export default function Home() {
                   Mint for 0.02Ξ
                 </Button>
               ) : (
-                <Box>
+                <Box display="inline-block">
                   <ConnectWalletButton />
                 </Box>
               )}
