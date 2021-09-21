@@ -58,7 +58,7 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     blockExplorer: "https://etherscan.io",
     contractConfig: contractConfig.mainnet,
     openSeaBaseUrl: "https://opensea.io",
-    openSeaProjectSlug: "chimp",
+    openSeaProjectSlug: "chimp-nft",
     openSeaBaseApiUrl: "https://api.opensea.io",
   },
   rinkeby: {
@@ -68,7 +68,7 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     blockExplorer: "https://rinkeby.etherscan.io",
     contractConfig: contractConfig.rinkeby,
     openSeaBaseUrl: "https://testnets.opensea.io",
-    openSeaProjectSlug: "chimp",
+    openSeaProjectSlug: "chimp-nft",
     openSeaBaseApiUrl: "https://testnets-api.opensea.io",
   },
 }
