@@ -35,6 +35,7 @@ export type EthNetworkConfig = {
   openSeaBaseUrl?: string
   openSeaProjectSlug?: string
   openSeaBaseApiUrl: string
+  chimpGraphUrl: string
 }
 
 const localNetworkConfig: EthNetworkConfig = {
@@ -43,6 +44,7 @@ const localNetworkConfig: EthNetworkConfig = {
   rpcUrl: "http://localhost:8545",
   contractConfig: localContractConfig.localhost,
   openSeaBaseApiUrl: "https://api.opensea.io",
+  chimpGraphUrl: "https://api.thegraph.com/subgraphs/name/knav-eth/chimp",
 }
 
 export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
@@ -60,6 +62,7 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     openSeaBaseUrl: "https://opensea.io",
     openSeaProjectSlug: "chimp-nft",
     openSeaBaseApiUrl: "https://api.opensea.io",
+    chimpGraphUrl: "https://api.thegraph.com/subgraphs/name/knav-eth/chimp",
   },
   rinkeby: {
     name: "rinkeby",
@@ -70,5 +73,6 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     openSeaBaseUrl: "https://testnets.opensea.io",
     openSeaProjectSlug: "chimp-nft",
     openSeaBaseApiUrl: "https://testnets-api.opensea.io",
+    chimpGraphUrl: "https://api.thegraph.com/subgraphs/name/knav-eth/chimp",
   },
 }
