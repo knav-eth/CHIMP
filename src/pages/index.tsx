@@ -1,4 +1,17 @@
-import { Alert, AlertIcon, Box, Button, Link, Text } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  Flex,
+  Link,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+} from "@chakra-ui/react"
 import "@fontsource/source-serif-pro/400.css"
 import { BigNumber, ethers } from "ethers"
 import _ from "lodash"
@@ -83,6 +96,10 @@ export default function Home() {
     setPixels(initializePixels())
   }, [setColors, setPixels])
 
+  const handleReset = useCallback(() => {
+    setPixels(initializePixels())
+  }, [])
+
   const handleMint = useCallback(async () => {
     if (!provider) return
     try {
@@ -163,14 +180,53 @@ export default function Home() {
             </Box>
 
             <Box marginTop="24px" textAlign="center">
-              <Button
-                onClick={handleMint}
-                isLoading={isMinting}
-                variant="outline"
-                mr={2}
-              >
-                Reset
-              </Button>
+              <Popover>
+                {({ onClose }) => {
+                  return (
+                    <>
+                      <PopoverTrigger>
+                        <Button
+                          isLoading={isMinting}
+                          variant="outline"
+                          mr={2}
+                        >
+                          Reset
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverBody padding={2}>
+                          <Box padding={2}>
+                            Are you sure you want clear your drawing?
+                          </Box>
+                          <Flex>
+                            <Button
+                              flex={1}
+                              variant="outline"
+                              onClick={onClose}
+                              mr={2}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              flex={1}
+                              variant="solid"
+                              colorScheme="red"
+                              onClick={() => {
+                                onClose()
+                                handleReset()
+                              }}
+                            >
+                              Yes
+                            </Button>
+                          </Flex>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </>
+                  )
+                }}
+              </Popover>
+
               {isConnected ? (
                 <Button
                   onClick={handleMint}

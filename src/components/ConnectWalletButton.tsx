@@ -14,7 +14,7 @@ export const ConnectWalletButton: React.FC = () => {
             <MenuButton isActive={isOpen} as={Button} size="md">
               {address && address.slice(0, 8)}
             </MenuButton>
-            <MenuList background="#000">
+            <MenuList>
               <MenuItem onClick={disconnect}>Disconnect</MenuItem>
             </MenuList>
           </>
