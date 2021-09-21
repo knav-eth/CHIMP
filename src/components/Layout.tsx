@@ -1,4 +1,4 @@
-import { Box, Flex, FlexProps, Image, Link, Text } from "@chakra-ui/react"
+import { Box, Flex, FlexProps, Image, Text } from "@chakra-ui/react"
 import React from "react"
 import { useWallet } from "../hooks/useWallet"
 import { ConnectWalletButton } from "./ConnectWalletButton"
@@ -27,14 +27,10 @@ const Layout: React.FC<LayoutProps> = ({
       <Flex flexDir="column" minH="100vh">
         <Flex p={containerPadding} zIndex={1} alignItems="center">
           {!hideLogo && (
-            <Link href="/" passHref>
-              <Image
-                src="/chimp_logo.svg"
-                height="50px"
-                cursor="pointer"
-                _hover={{ opacity: 0.6 }}
-              />
-            </Link>
+            <Image
+              src="/chimp_logo.svg"
+              height="50px"
+            />
           )}
           {headerContent}
           <Flex justifyContent="flex-end" flex={1}>
