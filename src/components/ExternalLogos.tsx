@@ -1,7 +1,7 @@
 import { Link, Stack, StackItem } from "@chakra-ui/react"
 import Image from "next/image"
 import React, { useMemo } from "react"
-import { DISCORD_INVITE_LINK, TWITTER_HANDLE } from "../../shared/config/base"
+import { TWITTER_HANDLE } from "../../shared/config/base"
 import { getNetworkConfig } from "../utils/network"
 
 type LogoItemProps = {
@@ -45,7 +45,6 @@ export const ExternalLogos = () => {
 
   return (
     <Stack direction="row" spacing={4}>
-      <LogoItem href={DISCORD_INVITE_LINK} image="/discord_logo.svg" />
       {etherscanLink && (
         <LogoItem href={etherscanLink} image="/etherscan_logo.svg" />
       )}

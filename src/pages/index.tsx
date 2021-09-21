@@ -3,6 +3,8 @@ import "@fontsource/source-serif-pro/400.css"
 import { BigNumber, ethers } from "ethers"
 import _ from "lodash"
 import React, { useCallback, useMemo, useState } from "react"
+import { ConnectWalletButton } from "../components/ConnectWalletButton"
+import { ExternalLogos } from "../components/ExternalLogos"
 import Layout from "../components/Layout"
 import { LazyCanvas } from "../components/LazyCanvas"
 import { SuccessDisplay } from "../components/SuccessDisplay"
@@ -61,7 +63,7 @@ export function mapToColorIds(colors: Array<string>): [number, number, number, n
 }
 
 export default function Home() {
-  const { wallet } = useWallet()
+  const { wallet, isConnected } = useWallet()
   const { mainContract } = useMainContract()
   const provider = wallet?.web3Provider
 
@@ -120,8 +122,8 @@ export default function Home() {
   }, [isMinting, mintingTxn])
 
   return (
-    <Layout requireWallet>
-      <Box width="full" maxWidth="700px" marginX="auto" textAlign="center">
+    <Layout>
+      <Box flex={1} width="full" maxWidth="700px" marginX="auto" textAlign="center">
         {(tokenId !== null) ? (
           <SuccessDisplay onDone={handleResetState} tokenId={tokenId} />
         ) : (
@@ -139,9 +141,23 @@ export default function Home() {
                 onClick={handleMint}
                 isLoading={isMinting}
                 variant="outline"
+                mr={2}
               >
-                Mint
+                Reset
               </Button>
+              {isConnected ? (
+                <Button
+                  onClick={handleMint}
+                  isLoading={isMinting}
+                  variant="outline"
+                >
+                  Mint for 0.02Ξ
+                </Button>
+              ) : (
+                <Box>
+                  <ConnectWalletButton />
+                </Box>
+              )}
             </Box>
             <Box maxWidth="500px" marginTop={4} marginX="auto">
               {(errorMessage) && (
@@ -171,6 +187,7 @@ export default function Home() {
         )}
 
       </Box>
+      <ExternalLogos />
     </Layout>
   )
 }
