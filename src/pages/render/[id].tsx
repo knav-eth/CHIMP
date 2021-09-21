@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { AspectRatio, Box } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
