@@ -102,6 +102,10 @@ export default function Home() {
 
   const handleMint = useCallback(async () => {
     if (!provider) return
+    if (pixels == initialPixels) {
+      setErrorMessage("Unable to mint. Canvas unchanged. You must draw something.")
+      return
+    }
     try {
       setIsMinting(true)
       setErrorMessage(null)
